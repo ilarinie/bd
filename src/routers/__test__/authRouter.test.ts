@@ -1,9 +1,9 @@
 import request from 'supertest'
 import { app } from '../../app'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { clearDB } from '../../utils/clearDB'
-import { createUser } from '../../services/userService/createUser'
+import { createUser } from '../../services/userService'
 import { generateJwtToken } from '../../utils/generateJwtToken'
+import { v4 } from 'uuid'
 
 const testApp = request(app)
 
@@ -18,8 +18,7 @@ describe('Auth router', () => {
     }
 
     beforeEach(async () => {
-      await clearDB()
-      user = await createUser('test', TEST_PASSWORD)
+      user = await createUser(v4(), TEST_PASSWORD)
     })
 
     it('should return 200 and a valid token for a valid login', async () => {
@@ -29,8 +28,8 @@ describe('Auth router', () => {
       })
       const { token } = resp.body
 
-      expect(token).toBeDefined()
       expect(resp.status).toBe(200)
+      expect(token).toBeDefined()
       expect(token).toEqual(generateJwtToken(user))
     })
 
@@ -67,8 +66,7 @@ describe('Auth router', () => {
     }
 
     beforeEach(async () => {
-      await clearDB()
-      user = await createUser('test', TEST_PASSWORD)
+      user = await createUser(v4(), TEST_PASSWORD)
     })
 
     it('should return 200 for a valid token', async () => {
@@ -88,22 +86,36 @@ describe('Auth router', () => {
       expect(resp.body).toEqual({ message: 'Unauthorized' })
     })
 
+    it('should return 401 for a misformatted token', async () => {
+      const token = 'invalidtoken'
+      const resp = await testApp.get('/api/checkLogin').set('Authorization', `Bearer${token}`)
+
+      expect(resp.status).toBe(401)
+      expect(resp.body).toEqual({ message: 'Unauthorized' })
+    })
+
     it('should return 401 for a missing token', async () => {
       const resp = await testApp.get('/api/checkLogin')
 
       expect(resp.status).toBe(401)
       expect(resp.body).toEqual({ message: 'Unauthorized' })
     })
+
+    it('should return 401 for a valid token with invalid user', async () => {
+      const token = generateJwtToken({
+        id: 'invalid id',
+        username: 'invalid username',
+      })
+      const resp = await testApp.get('/api/checkLogin').set('Authorization', `Bearer ${token}`)
+      expect(resp.status).toBe(401)
+      expect(resp.body).toEqual({ message: 'Unauthorized' })
+    })
   })
 
   describe('Create user', () => {
-    beforeEach(async () => {
-      await clearDB()
-    })
-
     it('should return 200 and a valid token for a valid user', async () => {
       const resp = await testApp.post('/api/createUser').send({
-        username: 'test',
+        username: v4(),
         password: 'password',
       })
 
@@ -125,13 +137,14 @@ describe('Auth router', () => {
       expect(resp.status).toBe(400)
     })
     it('should be able to login with the created user', async () => {
+      const username = v4()
       await testApp.post('/api/createUser').send({
-        username: 'test',
+        username: username,
         password: 'password',
       })
 
       const resp = await testApp.post('/api/login').send({
-        username: 'test',
+        username: username,
         password: 'password',
       })
 
@@ -139,8 +152,10 @@ describe('Auth router', () => {
       expect(resp.body.token).toBeDefined()
     })
     it('should be able to check login with the created user', async () => {
+      const username = v4()
+
       const resp = await testApp.post('/api/createUser').send({
-        username: 'test',
+        username: username,
         password: 'password',
       })
 
@@ -149,7 +164,7 @@ describe('Auth router', () => {
       const checkLoginResp = await testApp.get('/api/checkLogin').set('Authorization', `Bearer ${token}`)
 
       expect(checkLoginResp.status).toBe(200)
-      expect(checkLoginResp.body.username).toBe('test')
+      expect(checkLoginResp.body.username).toBe(username)
     })
   })
 })

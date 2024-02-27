@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { env } from '../env'
 import { number, object, string } from 'zod'
 import { prismaClient } from '../db'

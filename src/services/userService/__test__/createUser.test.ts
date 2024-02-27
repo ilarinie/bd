@@ -1,15 +1,12 @@
-import { beforeEach, describe, expect, it } from 'vitest'
-import { createUser } from '../createUser'
-import { clearDB } from '../../../utils/clearDB'
+import { describe, expect, it } from 'vitest'
+import { createUser } from '../'
+import { v4 } from 'uuid'
 
 describe('Create user', () => {
-  beforeEach(async () => {
-    await clearDB()
-  })
-
   it('should create a user', async () => {
-    const user = await createUser('test', 'password')
-    expect(user.username).toBe('test')
+    const userName = v4()
+    const user = await createUser(userName, 'password')
+    expect(user.username).toBe(userName)
     expect(user.hashed_password).not.toBe('password')
   })
 
@@ -18,6 +15,6 @@ describe('Create user', () => {
   })
 
   it('should not create a user without a password', async () => {
-    await expect(createUser('test', '')).rejects.toThrow('Username and password are required')
+    await expect(createUser(v4(), '')).rejects.toThrow('Username and password are required')
   })
 })

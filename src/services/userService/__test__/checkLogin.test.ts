@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { createUser } from '../createUser'
-import { clearDB } from '../../../utils/clearDB'
-import { checkLogin } from '../checkLogin'
+import { createUser } from '../'
+import { checkLogin } from '../'
+import { v4 } from 'uuid'
 
 const TEST_PASSWORD = 'password'
 
@@ -13,12 +13,12 @@ describe('Check login', () => {
   }
 
   beforeEach(async () => {
-    await clearDB()
-    user = await createUser('test', TEST_PASSWORD)
+    user = await createUser(v4(), TEST_PASSWORD)
   })
 
   it('should return true for a valid login', async () => {
     const result = await checkLogin(user.username, TEST_PASSWORD)
+    expect(result).toBeDefined()
     expect(result?.username).toBe(user.username)
   })
 

@@ -1,4 +1,4 @@
-import { coerce, number, object, string } from 'zod'
+import { coerce, object, string } from 'zod'
 
 const EnvSchema = object({
   VITE_DATABASE_URL: string(),

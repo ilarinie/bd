@@ -14,7 +14,61 @@ datasource db {
 }
 
 model User {
-  id              String @id @default(uuid())
-  username        String @unique
+  id              String          @id @default(uuid())
+  username        String          @unique
   hashed_password String
+  monthlyBudgets  MonthlyBudget[]
+  staticExpenses  StaticExpense[]
+  UserIncome      UserIncome[]
+}
+
+model UserIncome {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  amount     Float
+  startMonth Int
+  startYear  Int
+  endMonth   Int?
+  endYear    Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model StaticExpense {
+  id              String    @id @default(uuid())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
+  description     String
+  amount          Float
+  isActive        Boolean   @default(true)
+  activatedDate   DateTime  @default(now())
+  deactivatedDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  category        String
+}
+
+model MonthlyBudget {
+  id        String     @id @default(uuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+  month     Int
+  year      Int
+  budget    Float
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  purchases Purchase[]
+}
+
+model Purchase {
+  id              String        @id @default(uuid())
+  budget          MonthlyBudget @relation(fields: [budgetId], references: [id])
+  budgetId        String
+  description     String
+  amount          Float
+  category        String
+  staticExpenseId String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }

@@ -3,6 +3,7 @@ import { authRouter } from './routers/authRouter'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import { loggerMiddleware } from './middlewares/loggerMiddleware'
+import { budgetRouter } from './routers/budgetRouter'
 
 export const app = express()
 
@@ -15,3 +16,4 @@ app.get('/', (req, res) => {
 })
 
 app.use(authRouter)
+app.use(budgetRouter)

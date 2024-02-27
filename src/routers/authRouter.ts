@@ -1,10 +1,7 @@
 import express from 'express'
-import jwt from 'jsonwebtoken'
-import { checkLogin } from '../services/userService/checkLogin'
-import { env } from '../env'
 import { jwtTokenAuth } from '../middlewares/jwtTokenAuth'
 import { generateJwtToken } from '../utils/generateJwtToken'
-import { createUser } from '../services/userService/createUser'
+import { createUser, checkLogin } from '../services/userService/'
 
 export const authRouter = express.Router()
 
