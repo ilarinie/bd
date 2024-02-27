@@ -10,6 +10,8 @@ jobs:
       - uses: actions/setup-node@v3
       - name: Install
         run: npm install
+      - name: Prepeare test
+        run: npm run test:migrate
       - name: Test and Coverage
         run: npm run test # or npm run coverage
 
