@@ -5,14 +5,12 @@ import { createUser } from '../../userService'
 import { createStaticExpense } from '../createStaticExpense'
 import { Category } from '../../../utils/selectableCategories'
 import { prismaClient } from '../../../db'
-import { createUserIncome } from '../../userIncomeService'
 import { getOrCreateBudget } from '../../budgetService'
 
 describe('Create static expense', () => {
   let user: User | undefined
   beforeEach(async () => {
-    user = await createUser(v4(), 'password')
-    await createUserIncome(user!.id, { year: 2024, month: 0 }, 1000)
+    user = await createUser(v4(), 'password', 1000)
   })
 
   it('should create a static expense', async () => {

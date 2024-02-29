@@ -6,14 +6,12 @@ import { createStaticExpense } from '..'
 import { deactivateStaticExpense } from '../deactivateStaticExpense'
 import { prismaClient } from '../../../db'
 import { User } from '@prisma/client'
-import { createUserIncome } from '../../userIncomeService'
 import { getOrCreateBudget } from '../../budgetService'
 
 describe('Deactivate static expense', () => {
   let user: User | undefined
   beforeEach(async () => {
-    user = await createUser(v4(), 'foo')
-    await createUserIncome(user!.id, { year: 2024, month: 0 }, 1000)
+    user = await createUser(v4(), 'foo', 1000)
   })
 
   it('should deactivate a static expense', async () => {

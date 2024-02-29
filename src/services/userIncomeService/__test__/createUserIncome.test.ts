@@ -8,7 +8,7 @@ describe('Create user income', () => {
   let user: User | undefined
 
   beforeEach(async () => {
-    user = await createUser(v4(), 'password')
+    user = await createUser(v4(), 'password', 1000)
   })
 
   it('should create a user income when no income exists', async () => {
@@ -21,7 +21,7 @@ describe('Create user income', () => {
     await createUserIncome(user!.id, { year: 2024, month: 1 }, 1000)
     await createUserIncome(user!.id, { year: 2024, month: 0 }, 1000)
     const allIncomes = await getAllUserIncomes(user!.id)
-    expect(allIncomes.length).toBe(1)
+    expect(allIncomes.length).toBe(2)
   })
 
   it('should add endtime to older income when creating a new one', async () => {
@@ -56,7 +56,7 @@ describe('Create user income', () => {
     )
   })
 
-  it('should not be able to create incomes in the past, if there is a future ended income', async () => {
+  it('should end the last active income on the last month of previous year, if new income starts on the first month', async () => {
     await createUserIncome(user!.id, { year: 1999, month: 1 }, 1000)
     await createUserIncome(user!.id, { year: 2000, month: 0 }, 1000)
 

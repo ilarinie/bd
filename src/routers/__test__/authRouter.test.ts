@@ -18,7 +18,7 @@ describe('Auth router', () => {
     }
 
     beforeEach(async () => {
-      user = await createUser(v4(), TEST_PASSWORD)
+      user = await createUser(v4(), TEST_PASSWORD, 1000)
     })
 
     it('should return 200 and a valid token for a valid login', async () => {
@@ -66,7 +66,7 @@ describe('Auth router', () => {
     }
 
     beforeEach(async () => {
-      user = await createUser(v4(), TEST_PASSWORD)
+      user = await createUser(v4(), TEST_PASSWORD, 1000)
     })
 
     it('should return 200 for a valid token', async () => {
@@ -117,6 +117,7 @@ describe('Auth router', () => {
       const resp = await testApp.post('/api/createUser').send({
         username: v4(),
         password: 'password',
+        initialIncome: 1000,
       })
 
       expect(resp.status).toBe(200)
@@ -125,22 +126,38 @@ describe('Auth router', () => {
     it('should return 400 for a missing username', async () => {
       const resp = await testApp.post('/api/createUser').send({
         password: 'password',
+        initialIncome: 1000,
       })
 
       expect(resp.status).toBe(400)
+      expect(resp.body[0]).toBeDefined()
+      expect(resp.body[0].path[0]).toBe('username')
     })
     it('should return 400 for a missing password', async () => {
       const resp = await testApp.post('/api/createUser').send({
         username: 'test',
+        initialIncome: 1000,
       })
 
       expect(resp.status).toBe(400)
+      expect(resp.body[0]).toBeDefined()
+      expect(resp.body[0].path[0]).toBe('password')
+    })
+    it('should return 400 for a missing initialIncome', async () => {
+      const resp = await testApp.post('/api/createUser').send({
+        username: 'test',
+        password: 'password',
+      })
+      expect(resp.status).toBe(400)
+      expect(resp.body[0]).toBeDefined()
+      expect(resp.body[0].path[0]).toBe('initialIncome')
     })
     it('should be able to login with the created user', async () => {
       const username = v4()
       await testApp.post('/api/createUser').send({
         username: username,
         password: 'password',
+        initialIncome: 1000,
       })
 
       const resp = await testApp.post('/api/login').send({
@@ -157,6 +174,7 @@ describe('Auth router', () => {
       const resp = await testApp.post('/api/createUser').send({
         username: username,
         password: 'password',
+        initialIncome: 1000,
       })
 
       const token = resp.body.token

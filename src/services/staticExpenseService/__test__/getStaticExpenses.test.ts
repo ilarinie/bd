@@ -10,7 +10,7 @@ import { getStaticExpenses } from '../getStaticExpenses'
 describe('Get static expenses', () => {
   let user: User | undefined
   beforeEach(async () => {
-    user = await createUser(v4(), 'foo')
+    user = await createUser(v4(), 'foo', 1000)
     await createStaticExpense(user!.id, 'Test static expense', 100, Category.ALCOHOL)
     const staticExpense = await createStaticExpense(user!.id, 'Test static expense', 100, Category.ALCOHOL)
     await deactivateStaticExpense(user!.id, staticExpense.id)

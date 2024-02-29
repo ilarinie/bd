@@ -9,7 +9,7 @@ describe('getUserIncome', () => {
   let user: User | undefined
 
   beforeEach(async () => {
-    user = await createUser(v4(), 'password')
+    user = await createUser(v4(), 'password', 1000)
   })
 
   it('should return user income', async () => {
@@ -29,7 +29,7 @@ describe('getUserIncome', () => {
     expect(userIncome.amount).toBe(1000)
   })
 
-  it('should return correct user income with time args', async () => {
+  it('should return correct user income with time args vol 2', async () => {
     await createUserIncome(user!.id, { year: 2024, month: 0 }, 2000)
     await createUserIncome(user!.id, { year: 2024, month: 1 }, 1000)
     await createUserIncome(user!.id, { year: 2024, month: 2 }, 3000)
@@ -40,7 +40,7 @@ describe('getUserIncome', () => {
     expect(userIncome.amount).toBe(1000)
   })
 
-  it('should return correct user income with time args', async () => {
+  it('should return correct user income with time args vol 3', async () => {
     await createUserIncome(user!.id, { year: 2024, month: 0 }, 2000)
     await createUserIncome(user!.id, { year: 2024, month: 2 }, 3000)
 

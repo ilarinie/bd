@@ -10,7 +10,7 @@ import { prismaClient } from '../../db'
 
 describe('ClearDB', () => {
   it('should remove all data from the database', async () => {
-    const user = await createUser(v4(), 'password')
+    const user = await createUser(v4(), 'password', 1000)
     expect(user).toBeDefined()
     const income = await createUserIncome(user.id, { year: 2024, month: 0 }, 1000)
     expect(income).toBeDefined()

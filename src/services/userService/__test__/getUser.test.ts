@@ -6,7 +6,7 @@ import { User } from '@prisma/client'
 describe('Get user', () => {
   let user: User | undefined
   beforeEach(async () => {
-    user = await createUser(v4(), 'password')
+    user = await createUser(v4(), 'password', 1000)
   })
   it('should get a user', async () => {
     const foundUser = await getUser(user!.id)

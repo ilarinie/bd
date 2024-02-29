@@ -5,15 +5,13 @@ import { v4 } from 'uuid'
 import { createPurchase } from '../createPurchase'
 import { Category } from '../../../utils/selectableCategories'
 import { getBudgetById } from '../../budgetService/getBudgetById'
-import { createUserIncome } from '../../userIncomeService'
 import { createBudget } from '../../budgetService'
 
 describe('Create purchase', () => {
   let user: User | undefined
 
   beforeEach(async () => {
-    user = await createUser(v4(), 'password')
-    await createUserIncome(user!.id, { year: 2024, month: 0 }, 1000)
+    user = await createUser(v4(), 'password', 1000)
   })
   it('should create a purchase and a budget if none exists', async () => {
     const purchase = await createPurchase({ userId: user!.id, amount: 100, description: 'Test purchase', category: Category.FOOD })

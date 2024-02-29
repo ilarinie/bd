@@ -26,7 +26,7 @@ describe('Budget router', () => {
     let user: User | undefined
 
     beforeAll(async () => {
-      user = await createUser(v4(), TEST_PASSWORD)
+      user = await createUser(v4(), TEST_PASSWORD, 1000)
       await createUserIncome(user.id, { year: 2024, month: 0 }, 1000)
     })
 

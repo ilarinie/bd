@@ -10,7 +10,7 @@ import { Category } from '../../../utils/selectableCategories'
 describe('Create budget', () => {
   let user: User | undefined
   beforeEach(async () => {
-    user = await createUser(v4(), 'foo')
+    user = await createUser(v4(), 'foo', 1000)
     await createUserIncome(user!.id, { year: 2024, month: 0 }, 1000)
   })
 
@@ -18,9 +18,6 @@ describe('Create budget', () => {
     const budget = await createBudget(user!.id, { year: 2024, month: 0 })
     expect(budget.budget).toBe(1000)
     expect(budget.purchases).toEqual([])
-  })
-  it('should throw if no user income exists', async () => {
-    await expect(createBudget(user!.id, { year: 2023, month: 1 })).rejects.toThrow('User income not found')
   })
   it('should throw if user does not exists', async () => {
     await expect(createBudget('fooo', { year: 2024, month: 0 })).rejects.toThrow('User not found')

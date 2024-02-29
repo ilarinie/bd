@@ -13,13 +13,4 @@ jobs:
       - name: Prepare test
         run: npm run test:migrate
       - name: Test and Coverage
-        run: npm run test # or npm run coverage
-
-      - name: Publish Results Badge
-        uses: wjervis7/vitest-badge-action@v1.0.0
-        if: success() || failure() # run whether steps succeed or not
-        with:
-          result-type: lines
-          gist-token: ${{ secrets.GIST_TOKEN }} # if you want to upload badge to gist
-          gist-url: https://gist.github.com/ilarinie/gist:b7af6f84ed11bfa5ca7657d043d3228b
-          upload-badge: ${{ github.base_ref == 'refs/heads/main' }}
+        run: npm run test

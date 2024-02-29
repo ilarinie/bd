@@ -13,7 +13,7 @@ describe('Check login', () => {
   }
 
   beforeEach(async () => {
-    user = await createUser(v4(), TEST_PASSWORD)
+    user = await createUser(v4(), TEST_PASSWORD, 1000)
   })
 
   it('should return true for a valid login', async () => {
